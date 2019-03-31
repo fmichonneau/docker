@@ -1,6 +1,6 @@
 # Nextcloud Backup Service
 
-This Docker image provides a backup service to backup Nextcloud data and PostgreSQL database. The service can be added into a docker stack with an PostgreSQL instance to backup the database periodically.
+This Docker image provides a backup service to backup Nextcloud data and PostgreSQL database. The service can be added into a docker stack with a PostgreSQL instance to backup the database periodically.
 
 ## Features
 
@@ -16,7 +16,7 @@ This Docker image provides a backup service to backup Nextcloud data and Postgre
 - POSTGRES_USER - Database user
 - POSTGRES_PASSWORD - Database password
 - NEXTCLOUD_VOLUME - Nextcloud files directory
-- BACKUP_ROTATIONS - Number of backups to be kept locally
+- BACKUP_ROTATIONS - Number of backups to be kept locally (default 5)
 
 All backups are located in `/backups`. Each backup has a date prefix `2019-03-31.nextcloud.tag.gz`.
 
@@ -70,7 +70,7 @@ volumes:
 
 ## Contribute
 
-The source is available on [GitHub](https://github.com/V1ncNet/docker/tree/master/backup-nextcloud). Please [report any issues](https://github.com/V1ncNet/docker/issues).
+The source is available on [GitHub](https://github.com/V1ncNet/docker). Please [report any issues](https://github.com/V1ncNet/docker/issues).
 
 To build the image from the Dockerfile run:
 

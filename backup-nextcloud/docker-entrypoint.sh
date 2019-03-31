@@ -16,7 +16,7 @@ echo "[Entrypoint]       POSTGRES_USER = ${POSTGRES_USER}"
 echo "[Entrypoint]   POSTGRES_PASSWORD = ********"
 
 if [ "$1" = 'cron' ]; then
-  echo "[Entrypoint]         CRON_PERIOD = '${CRON_PERIOD}'"
+  echo "[Entrypoint]         CRON_PERIOD = ${CRON_PERIOD}"
   echo
 
   echo "[Entrypoint] Initalize backup service....."
@@ -37,7 +37,7 @@ if [ "$1" = 'backup' ]; then
   echo
   echo "[Entrypoint] Starting backup...."
   echo
-  /bin/sh /usr/local/bin/backup.sh
+  BACKUP_ROTATIONS=${BACKUP_ROTATIONS} /bin/sh /usr/local/bin/backup.sh
 fi
 
 exec "$@"

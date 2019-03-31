@@ -2,7 +2,7 @@ FROM alpine
 
 LABEL maintainer="vincent.nadoll@gmail.com"
 
-RUN apk add postgresql-client gzip
+RUN apk add --no-cache postgresql-client
 
 COPY backup.sh            /usr/local/bin/
 COPY docker-entrypoint.sh /usr/local/bin/

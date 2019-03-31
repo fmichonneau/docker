@@ -18,7 +18,6 @@ fi
 rm ${db_file}
 echo "[Backup] ${date} *** Done"
 
-existing_backups=$(ls -l /backups/*.nextcloud.tar.gz | grep -v ^l | wc -l)
 if [ "$(ls -l /backups/*.nextcloud.tar.gz | grep -v ^l | wc -l)" -gt "${BACKUP_ROTATIONS}" ]; then
   echo "[Backup] ${date} *** Removing deprecated backup files..."
   ls -F /backups/*.nextcloud.tar.gz | head -n -${BACKUP_ROTATIONS} | xargs rm
