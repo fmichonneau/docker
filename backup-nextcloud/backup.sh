@@ -1,0 +1,32 @@
+#!/bin/sh
+
+date="$(date +%Y-%m-%d)"
+backup_file="/backups/${date}.nextcloud.tar.gz"
+db_file="/backups/${date}.nextcloud.sql.gz"
+
+echo "[Backup] ${date} *** Dumping Nextcloud database..."
+PGPASSWORD="${POSTGRES_PASSWORD}" pg_dumpall -c -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -l ${POSTGRES_DB} | gzip -9 > "${db_file}"
+echo "[Backup] ${date} *** Done"
+
+echo "[Backup] ${date} *** Backing up Nextcloud data..."
+if [ -z "${NEXTCLOUD_VOLUME}" ]; then
+  tar czf --absolute-names ${backup_file} ${db_file}
+else
+  echo "[Backup] ${date} *** This may take a while..."
+  tar czf --absolute-names ${backup_file} ${db_file} ${NEXTCLOUD_VOLUME}
+fi
+rm ${db_file}
+echo "[Backup] ${date} *** Done"
+
+existing_backups=$(ls -l /backups/*.nextcloud.tar.gz | grep -v ^l | wc -l)
+if [ "$(ls -l /backups/*.nextcloud.tar.gz | grep -v ^l | wc -l)" -gt "${BACKUP_ROTATIONS}" ]; then
+  echo "[Backup] ${date} *** Removing deprecated backup files..."
+  ls -F /backups/*.nextcloud.tar.gz | head -n -${BACKUP_ROTATIONS} | xargs rm
+  echo "[Backup] ${date} *** Done"
+fi
+
+echo "[Backup] ${date} *** Created Nextcloud backup: ${backup_file} ($(ls -l -h ${backup_file} | cut -d " " -f18)B)"
+echo "[Backup] ${date} *** Backup completed successfully."
+echo
+
+exit 0
