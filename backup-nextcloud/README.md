@@ -70,7 +70,7 @@ volumes:
 
 ## Contribute
 
-The source is available on [GitHub](https://github.com/V1ncNet/docker/backup-nextcloud). Please [report any issues](https://github.com/V1ncNet/docker/issues).
+The source is available on [GitHub](https://github.com/V1ncNet/docker/tree/master/backup-nextcloud). Please [report any issues](https://github.com/V1ncNet/docker/issues).
 
 To build the image from the Dockerfile run:
 
