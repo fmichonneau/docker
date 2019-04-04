@@ -40,4 +40,4 @@ if [ "$1" = 'backup' ]; then
   BACKUP_ROTATIONS=${BACKUP_ROTATIONS} /bin/sh /usr/local/bin/backup.sh
 fi
 
-exec "$@"
+exit 0
