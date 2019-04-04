@@ -23,7 +23,7 @@ if [ "$1" = 'cron' ]; then
   echo "[Entrypoint] Installing cron: ${CRON_PERIOD}"
 
   # create backup-cron file...
-  echo "${CRON_PERIOD} /usr/local/bin/backup.sh" >> /var/spool/cron/crontabs/root
+  echo "${CRON_PERIOD} /usr/local/bin/backup" >> /var/spool/cron/crontabs/root
 
   echo "[Entrypoint] Initalize backup service completed."
   echo "[Entrypoint] Starting cron...."
@@ -37,7 +37,7 @@ if [ "$1" = 'backup' ]; then
   echo
   echo "[Entrypoint] Starting backup...."
   echo
-  BACKUP_ROTATIONS=${BACKUP_ROTATIONS} /bin/sh /usr/local/bin/backup.sh
+  BACKUP_ROTATIONS=${BACKUP_ROTATIONS} /bin/sh /usr/local/bin/backup
 fi
 
 exit 0
