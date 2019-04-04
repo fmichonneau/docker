@@ -23,7 +23,7 @@ All backups are located in `/backups`. Each backup has a date prefix `2019-03-31
 All scripts are located in `/usr/local/bin` and can be called manually. E.g.
 
 ```sh
-docker exec -it applicaiton_backup docker-entrypoint.sh backup
+docker exec -it application_backup docker-entrypoint.sh backup
 ```
 
 ## How to Deploy the Service
