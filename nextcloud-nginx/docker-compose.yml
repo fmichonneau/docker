@@ -31,7 +31,7 @@ services:
     image: vinado/nextcloud-nginx:latest
     restart: unless-stopped
     ports:
-      - "8080":"80"
+      - "8000:80"
     volumes:
       - data:/var/www/html:ro
     environment:
