@@ -33,7 +33,7 @@ docker exec -it nextcloud_backup docker-entrypoint.sh backup
 The service is supposed to be part of a Docker service stack.
 
 ```yaml
-version: '3.3'
+version: '2'
 
 services:
   database:
@@ -53,7 +53,7 @@ services:
     depends_on:
       - nextcloud
     volumes:
-      - nextcloud:/var/www/html
+      - nextcloud:/var/www/html:ro
       - backups:/backups
     environment:
       CRON_PERIOD: "0 0 * * 1"
@@ -65,7 +65,9 @@ services:
 
 volumes:
   nextcloud:
+    driver: local
   backups:
+    driver: local
 ```
 
 ## Contribute

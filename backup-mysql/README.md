@@ -31,7 +31,7 @@ docker exec -it application_backup docker-entrypoint.sh backup
 The service is supposed to be part of a Docker service stack.
 
 ```yaml
-version: '3.3'
+version: '2'
 
 services:
   app:
@@ -53,6 +53,7 @@ services:
 
 volumes:
   backups:
+    driver: local
 ```
 
 ## Contribute
