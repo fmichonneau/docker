@@ -1,0 +1,64 @@
+version: '2'
+
+services:
+  database:
+    image: postgres:alpine
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - db.env
+
+  redis:
+    image: redis:alpine
+    restart: always
+
+  app:
+    image: nextcloud:fpm-alpine
+    restart: unless-stopped
+    volumes:
+      - data:/var/www/html
+    environment:
+      - POSTGRES_HOST=database
+      - REDIS_HOST=redis
+    depends_on:
+      - database
+      - redis
+    env_file:
+      - db.env
+
+  web:
+    image: vinado/nextcloud-nginx:latest
+    restart: unless-stopped
+    ports:
+      - "8080":"80"
+    volumes:
+      - data:/var/www/html:ro
+    environment:
+      - NEXTCLOUD_HOST=app
+    depends_on:
+      - app
+  
+  backup:
+    image: vinado/backup-nextcloud:latest
+    restart: unless-stopped
+    depends_on:
+      - app
+      - database
+    volumes:
+      - data:/var/www/html:ro
+      - backups:/backups
+    environment:
+      - CRON_PERIOD="0 0 * * 1"
+      - NEXTCLOUD_VOLUME=/var/www/html
+      - POSTGRES_HOST=database
+    env_file:
+      - db.env
+      
+volumes:
+  pgdata:
+    driver: local
+  data:
+    driver: local
+  backups:
+    driver: local
