@@ -15,17 +15,17 @@ echo "[Entrypoint]         POSTGRES_DB = ${POSTGRES_DB}"
 echo "[Entrypoint]       POSTGRES_USER = ${POSTGRES_USER}"
 echo "[Entrypoint]   POSTGRES_PASSWORD = ********"
 
-if [ "$1" = 'cron' ]; then
+if [ "$1" = "cron" ]; then
   echo "[Entrypoint]         CRON_PERIOD = ${CRON_PERIOD}"
   echo
 
-  echo "[Entrypoint] Initalize backup service....."
+  echo "[Entrypoint] Initialize backup service....."
   echo "[Entrypoint] Installing cron: ${CRON_PERIOD}"
 
   # create backup-cron file...
   echo "${CRON_PERIOD} /usr/local/bin/backup" >> /var/spool/cron/crontabs/root
 
-  echo "[Entrypoint] Initalize backup service completed."
+  echo "[Entrypoint] Initialize backup service completed."
   echo "[Entrypoint] Starting cron...."
   echo
 
@@ -33,7 +33,7 @@ if [ "$1" = 'cron' ]; then
   crond -l 2 -f
 fi
 
-if [ "$1" = 'backup' ]; then
+if [ "$1" = "backup" ]; then
   echo
   echo "[Entrypoint] Starting backup...."
   echo

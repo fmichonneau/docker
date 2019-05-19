@@ -1,10 +1,10 @@
 FROM alpine
 
-LABEL maintainer="vincent.nadoll@gmail.com"
+LABEL maintainer="me@vinado.de"
 
 RUN apk add --no-cache mysql-client
 
-COPY backup            /usr/local/bin/
+COPY backup               /usr/local/bin/
 COPY docker-entrypoint.sh /usr/local/bin/
 
 RUN mkdir /backups

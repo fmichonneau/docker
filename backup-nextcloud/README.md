@@ -5,7 +5,7 @@ This Docker image provides a backup service to backup Nextcloud data and Postgre
 ## Features
 
 - Backup PostgreSQL database
-- Backup Nexcloud files
+- Backup Nextcloud files
 - Cron Job
 
 ## Environment

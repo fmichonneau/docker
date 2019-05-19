@@ -1,4 +1,4 @@
-## Nginx Netcloud FPM Image
+## Nginx Nextcloud FPM Image
 
 This image builds upon the nginx:alpine image and adds and an `nginx.conf.template` replacement. Dockerfile and nginx can be found in the official [nextcloud/docker](https://github.com/nextcloud/docker/tree/master/.examples) examples section.
 

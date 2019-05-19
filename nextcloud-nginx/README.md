@@ -2,7 +2,7 @@
 
 This Docker stack provides an example for Nextcloud FPM and nginx. Yet this stack should not perform in a production environment without some kind of encryption.
 
-**NOTE:** I was not able to deploy the stack without trouble. Auto-configuration with Nextcloud and PostgreSQL does not work seamlessly as promised. I hat to create the stack without the actual Nextcloud application, create database and database user manually and add the app section afterwards.
+**NOTE:** I was not able to deploy the stack without trouble. Auto-configuration with Nextcloud and PostgreSQL does not work seamlessly as promised. I had to create the stack without the actual Nextcloud application, create database and database user manually and add the app section afterwards.
 
 ## Features/Images
 
