@@ -1,6 +1,6 @@
 #!/bin/sh
 
-date="$(date +%Y-%m-%d_%H:%M)"
+date="$(date +%Y-%m-%dT%H.%M)"
 file="/backups/${date}.dump.sql.gz"
 
 echo "[Backup] ${date} *** Dumping MySQL database..."

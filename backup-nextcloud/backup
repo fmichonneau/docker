@@ -1,6 +1,6 @@
 #!/bin/sh
 
-date="$(date +%Y-%m-%d)"
+date="$(date +%Y-%m-%dT%H.%M)"
 backup_file="/backups/${date}.nextcloud.tar.gz"
 db_file="/backups/${date}.nextcloud.sql.gz"
 

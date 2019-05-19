@@ -18,7 +18,7 @@ This Docker image provides a backup service to backup Nextcloud data and Postgre
 - NEXTCLOUD_VOLUME - Nextcloud files directory
 - BACKUP_ROTATIONS - Number of backups to be kept locally (default 5)
 
-All backups are located in `/backups`. Each backup has a date prefix `2019-03-31.nextcloud.tag.gz`.
+All backups are located in `/backups`. Each backup has a date prefix `2019-05-19T20.48.nextcloud.tag.gz`.
 
 ### Scripts
 

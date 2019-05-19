@@ -16,7 +16,7 @@ This Docker image provides a backup service to backup a MySQL database. The serv
 - MYSQL_PASSWORD - Database password
 - BACKUP_ROTATIONS - Number of backups to be kept locally (default 5)
 
-All backups are located in `/backups`. Each backup has a date prefix `2019-03-31.dump.tag.gz`.
+All backups are located in `/backups`. Each backup has a date prefix `2019-05-19T20.48.dump.tag.gz`.
 
 ### Scripts
 
