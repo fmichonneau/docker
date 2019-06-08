@@ -1,0 +1,45 @@
+version: '2'
+
+services:
+  database:
+    image: postgres:alpine
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=verysecurepassword
+      - POSTGRES_DB=codimd
+      - POSTGRES_USER=codimd
+
+  app:
+    build: .
+    image: vinado/codimd:latest
+    restart: unless-stopped
+    ports:
+      - "80:3000"
+    volumes:
+      - docs:/codimd/public/docs
+      - views:/codimd/public/views
+      - uploads:/codimd/public/uploads
+    environment:
+      - DB_HOST=database
+      - DBMS=postgres
+      - DB_PASSWORD=verysecurepassword
+      - DB_NAME=codimd
+      - DB_USER=codimd
+      - DB_PORT=5432
+      - CMD_LOG_LEVEL=warn
+      - CMD_DB_URL=postgres://codimd:verysecurepassword@database:5432/codimd
+      - CMD_DOMAIN=localhost
+    depends_on:
+      - database
+
+volumes:
+  pgdata:
+    driver: local
+  docs:
+    driver: local
+  views:
+    driver: local
+  uploads:
+    driver: local

@@ -5,6 +5,7 @@ A collection of my Dockerfiles: https://hub.docker.com/u/vinado
 ## Stacks
 
 - [nextcloud](https://github.com/V1ncNet/docker/tree/master/nextcloud-nginx) - a complete Docker Compose stack for running Nextcloud along with nginx
+- [codimd](https://github.com/V1ncNet/docker/tree/master/codimd) - a CodiMD Dockerfile and complete Docker Compose stack for running CodiMD
 
 ## Backup Services
 
