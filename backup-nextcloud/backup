@@ -5,7 +5,7 @@ backup_file="/backups/${date}.nextcloud.tar.gz"
 db_file="/backups/${date}.nextcloud.sql.gz"
 
 echo "[Backup] ${date} *** Dumping Nextcloud database..."
-PGPASSWORD="${POSTGRES_PASSWORD}" pg_dumpall -c -h ${POSTGRES_HOST} -U ${POSTGRES_USER} -l ${POSTGRES_DB} | gzip -9 > "${db_file}"
+PGPASSWORD="${POSTGRES_PASSWORD}" pg_dump -c -h ${POSTGRES_HOST} -U ${POSTGRES_USER} ${POSTGRES_DB} | gzip -9 > "${db_file}"
 echo "[Backup] ${date} *** Done"
 
 echo "[Backup] ${date} *** Backing up Nextcloud data..."
