@@ -24,7 +24,7 @@ if [ "$(ls -l /backups/*.nextcloud.tar.gz | grep -v ^l | wc -l)" -gt "${BACKUP_R
   echo "[Backup] ${date} *** Done"
 fi
 
-echo "[Backup] ${date} *** Created Nextcloud backup: ${backup_file} ($(ls -l -h ${backup_file} | cut -d " " -f18)B)"
+echo "[Backup] ${date} *** Created Nextcloud backup: ${backup_file} ($(ls -l -h ${backup_file} | cut -d " " -f19)B)"
 echo "[Backup] ${date} *** Backup completed successfully."
 echo
 
