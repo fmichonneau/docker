@@ -10,12 +10,12 @@ echo "[Backup] ${date} *** Done"
 
 echo "[Backup] ${date} *** Backing up Nextcloud data..."
 if [ -z "${NEXTCLOUD_VOLUME}" ]; then
-  tar czf --absolute-names ${backup_file} ${db_file}
+  ${backup_file}=${db_file}
 else
   echo "[Backup] ${date} *** This may take a while..."
-  tar czf --absolute-names ${backup_file} ${db_file} ${NEXTCLOUD_VOLUME}
+  tar czf ${backup_file} ${db_file} ${NEXTCLOUD_VOLUME}
+  rm ${db_file}
 fi
-rm ${db_file}
 echo "[Backup] ${date} *** Done"
 
 if [ "$(ls -l /backups/*.nextcloud.tar.gz | grep -v ^l | wc -l)" -gt "${BACKUP_ROTATIONS}" ]; then
