@@ -75,5 +75,5 @@ fi
 
 # --- SUMMARY ---
 
-log "Successfully created Nextcloud backup ${backup_destination}${backup_date} ($(ls -l -h ${backup_destination}${backup_date} | cut -d " " -f19)B)"
+log "Successfully created Nextcloud backup ${backup_destination}${backup_date} ($(du -sh ${backup_destination}${backup_date} | cut -f1)B)"
 exit 0
