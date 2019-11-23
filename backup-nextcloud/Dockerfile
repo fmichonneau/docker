@@ -2,7 +2,7 @@ FROM alpine
 
 LABEL maintainer="me@vinado.de"
 
-RUN apk add --no-cache postgresql-client
+RUN apk add --no-cache postgresql-client rsync
 
 COPY backup               /usr/local/bin/
 COPY docker-entrypoint.sh /usr/local/bin/

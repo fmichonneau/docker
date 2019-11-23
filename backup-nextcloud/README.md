@@ -2,23 +2,28 @@
 
 This Docker image provides a backup service to backup Nextcloud data and PostgreSQL database. The service can be added into a docker stack with a PostgreSQL instance to backup the database periodically.
 
+When a new backup is made, files from the older backups are hard-linked. This keeps the increments small because they only contain the delta from the previous backup.
+
 ## Features
 
-- Backup PostgreSQL database
-- Backup Nextcloud files
-- Cron Job
+- PostgreSQL database dumps using `pg_dump`
+- Incremental Nextcloud file backup using `rsync`
+- Configurable Cronjob
+- Configurable rotations
+
+This service doesn't provide any restore function yet.
 
 ## Environment
 
-- CRON_PERIOD - Cron timer settings
+- CRON_PERIOD - Cron expression
 - POSTGRES_HOST - PostgreSQL database server
 - POSTGRES_DB - Database name
 - POSTGRES_USER - Database user
 - POSTGRES_PASSWORD - Database password
-- NEXTCLOUD_VOLUME - Nextcloud files directory
-- BACKUP_ROTATIONS - Number of backups to be kept locally (default 5)
+- NEXTCLOUD_VOLUME - Nextcloud files directory (usually `/var/www/html`)
+- BACKUP_ROTATIONS - Number of backups to be kept locally (default 4)
 
-All backups are located in `/backups`. Each backup has a date prefix `2019-05-19T20.48.nextcloud.tag.gz`.
+All backups are located in `/backups/backups`. Dumps are saved under `/backup/dumps`. They are excluded from the rotation.
 
 ### Scripts
 
@@ -28,7 +33,7 @@ All scripts are located in `/usr/local/bin` and can be called manually. E.g.
 docker exec -it nextcloud_backup docker-entrypoint.sh backup
 ```
 
-## How to Deploy the Service
+## Deployment
 
 The service is supposed to be part of a Docker service stack.
 

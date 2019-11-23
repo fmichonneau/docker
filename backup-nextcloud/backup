@@ -1,31 +1,79 @@
 #!/bin/sh
 
-date="$(date +%Y-%m-%dT%H.%M)"
-backup_file="/backups/${date}.nextcloud.tar.gz"
-db_file="/backups/${date}.nextcloud.sql.gz"
+log() {
+  echo "[Backup] ${1}"
+  return 0
+}
 
-echo "[Backup] ${date} *** Dumping Nextcloud database..."
-PGPASSWORD="${POSTGRES_PASSWORD}" pg_dump -c -h ${POSTGRES_HOST} -U ${POSTGRES_USER} ${POSTGRES_DB} | gzip -9 > "${db_file}"
-echo "[Backup] ${date} *** Done"
+log_done() {
+  echo "[Backup] Done"
+  return 0
+}
 
-echo "[Backup] ${date} *** Backing up Nextcloud data..."
-if [ -z "${NEXTCLOUD_VOLUME}" ]; then
-  ${backup_file}=${db_file}
+error() {
+  echo >&2 "[Backup] ${1}"
+  return 0
+}
+
+error_exit() {
+  echo >&2 "[Backup] ${1}"
+  exit 1
+}
+
+# --- SETUP ---
+
+backup_date=$(date -u +"%Y-%m-%d")
+
+backup_source=$(echo ${NEXTCLOUD_VOLUME} | sed 's:/*$::')
+backup_source="${backup_source}/"
+
+backup_destination=/backups/backups/
+dump_destination=/backups/dumps/
+
+# Create destination directories if not present
+[ -d ${backup_destination} ] || mkdir -p ${backup_destination}
+[ -d ${dump_destination} ] || mkdir -p ${dump_destination}
+
+# --- DUMP ---
+
+log "Dumping Nextcloud database to ${dump_destination}${backup_date}.nextcloud.sql.gz"
+PGPASSWORD="${POSTGRES_PASSWORD}" pg_dump -c -h ${POSTGRES_HOST} -U ${POSTGRES_USER} ${POSTGRES_DB} | gzip -9 > "${dump_destination}${backup_date}.nextcloud.sql.gz"
+if [ ${?} -eq 0 ]; then
+  log_done
 else
-  echo "[Backup] ${date} *** This may take a while..."
-  tar czf ${backup_file} ${db_file} ${NEXTCLOUD_VOLUME}
-  rm ${db_file}
-fi
-echo "[Backup] ${date} *** Done"
-
-if [ "$(ls -l /backups/*.nextcloud.tar.gz | grep -v ^l | wc -l)" -gt "${BACKUP_ROTATIONS}" ]; then
-  echo "[Backup] ${date} *** Removing deprecated backup files..."
-  ls -F /backups/*.nextcloud.tar.gz | head -n -${BACKUP_ROTATIONS} | xargs rm
-  echo "[Backup] ${date} *** Done"
+  error "Dump failed"
 fi
 
-echo "[Backup] ${date} *** Created Nextcloud backup: ${backup_file} ($(ls -l -h ${backup_file} | cut -d " " -f19)B)"
-echo "[Backup] ${date} *** Backup completed successfully."
-echo
+# --- RSYNC ---
 
+log "Rsync ${backup_source} to ${backup_destination}${backup_date}. This may take a while..."
+rsync \
+  --human-readable \
+  --archive \
+  --delete \
+  --delete-excluded \
+  "${backup_source}" "${backup_destination}${backup_date}/" \
+  --link-dest="${backup_destination}current/"
+[ ${?} -ne 0 ] && error_exit "Rsync failed"
+log_done
+
+# --- SYMBOLIC LINK ---
+
+log "Linking latest Backup to ${backup_destination}current"
+ln -nsf "${backup_destination}${backup_date}" "${backup_destination}current"
+[ ${?} -ne 0 ] && error_exit "Soft-linking failed"
+log_done
+
+# --- ROTATE ---
+
+if [ "$(ls -1rd ${backup_destination}* | tail -n +$((${BACKUP_ROTATIONS} + 2)) | wc -l)" -gt 0 ]; then
+  log "Removing deprecated backup files..."
+  ls -1rdF ${backup_destination}* | tail -n +$((${BACKUP_ROTATIONS} + 2)) | xargs rm -R
+  [ ${?} -ne 0 ] && error "Failed to remove deprecated Backups"
+  log_done
+fi
+
+# --- SUMMARY ---
+
+log "Successfully created Nextcloud backup ${backup_destination}${backup_date} ($(ls -l -h ${backup_destination}${backup_date} | cut -d " " -f19)B)"
 exit 0

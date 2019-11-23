@@ -2,31 +2,36 @@
 
 set -e
 
+log() {
+  echo "[Entrypoint] ${1}"
+  return 0
+}
+
 if [ -z "${BACKUP_ROTATIONS}" ]; then
-  export BACKUP_ROTATIONS=5
+  export BACKUP_ROTATIONS=4
 fi
 
-echo "[Entrypoint] Setup environment..."
+log "Setup environment..."
 echo
-echo "[Entrypoint]    NEXTCLOUD_VOLUME = ${NEXTCLOUD_VOLUME}"
-echo "[Entrypoint]    BACKUP_ROTATIONS = ${BACKUP_ROTATIONS}"
-echo "[Entrypoint]       POSTGRES_HOST = ${POSTGRES_HOST}"
-echo "[Entrypoint]         POSTGRES_DB = ${POSTGRES_DB}"
-echo "[Entrypoint]       POSTGRES_USER = ${POSTGRES_USER}"
-echo "[Entrypoint]   POSTGRES_PASSWORD = ********"
+log "   NEXTCLOUD_VOLUME = ${NEXTCLOUD_VOLUME}"
+log "   BACKUP_ROTATIONS = ${BACKUP_ROTATIONS}"
+log "      POSTGRES_HOST = ${POSTGRES_HOST}"
+log "        POSTGRES_DB = ${POSTGRES_DB}"
+log "      POSTGRES_USER = ${POSTGRES_USER}"
+log "  POSTGRES_PASSWORD = ********"
 
 if [ "$1" = "cron" ]; then
-  echo "[Entrypoint]         CRON_PERIOD = ${CRON_PERIOD}"
+  log "        CRON_PERIOD = ${CRON_PERIOD}"
   echo
 
-  echo "[Entrypoint] Initialize backup service....."
-  echo "[Entrypoint] Installing cron: ${CRON_PERIOD}"
+  log "Initialize backup service....."
+  log "Installing cron: ${CRON_PERIOD}"
 
   # create backup-cron file...
   echo "${CRON_PERIOD} /usr/local/bin/backup" >> /var/spool/cron/crontabs/root
 
-  echo "[Entrypoint] Initialize backup service completed."
-  echo "[Entrypoint] Starting cron...."
+  log "Initialize backup service completed."
+  log "Starting cron...."
   echo
 
   # Run cron.....
@@ -35,7 +40,7 @@ fi
 
 if [ "$1" = "backup" ]; then
   echo
-  echo "[Entrypoint] Starting backup...."
+  log "Starting backup...."
   echo
   BACKUP_ROTATIONS=${BACKUP_ROTATIONS} /bin/sh /usr/local/bin/backup
 fi
