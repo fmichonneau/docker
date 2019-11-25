@@ -20,7 +20,7 @@ This service doesn't provide any restore function yet.
 - POSTGRES_DB - Database name
 - POSTGRES_USER - Database user
 - POSTGRES_PASSWORD - Database password
-- CODIMD_UPLOADS - CodiMD files directory (usually `/var/www/html`)
+- CODIMD_UPLOADS - CodiMD files directory (usually `/codimd/public/uploads`)
 - BACKUP_ROTATIONS - Number of backups to be kept locally (default 7)
 
 All backups are located in `/backups/uploads`. Dumps are saved under `/backup/dumps`. They are excluded from the rotation.
