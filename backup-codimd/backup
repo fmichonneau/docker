@@ -1,0 +1,79 @@
+#!/bin/sh
+
+log() {
+  echo "[Backup] ${1}"
+  return 0
+}
+
+log_done() {
+  echo "[Backup] Done"
+  return 0
+}
+
+error() {
+  echo >&2 "[Backup] ${1}"
+  return 0
+}
+
+error_exit() {
+  echo >&2 "[Backup] ${1}"
+  exit 1
+}
+
+# --- SETUP ---
+
+backup_date=$(date -u +"%Y-%m-%d")
+
+backup_source=$(echo ${CODIMD_UPLOADS} | sed 's:/*$::')
+backup_source="${backup_source}/"
+
+backup_destination=/backups/uploads/
+dump_destination=/backups/dumps/
+
+# Create destination directories if not present
+[ -d ${backup_destination} ] || mkdir -p ${backup_destination}
+[ -d ${dump_destination} ] || mkdir -p ${dump_destination}
+
+# --- DUMP ---
+
+log "Dumping CodiMD database to ${dump_destination}${backup_date}.codimd.sql.gz"
+PGPASSWORD="${POSTGRES_PASSWORD}" pg_dump -c -h ${POSTGRES_HOST} -U ${POSTGRES_USER} ${POSTGRES_DB} | gzip -9 > "${dump_destination}${backup_date}.codimd.sql.gz"
+if [ ${?} -eq 0 ]; then
+  log_done
+else
+  error "Dump failed"
+fi
+
+# --- RSYNC ---
+
+log "Rsync ${backup_source} to ${backup_destination}${backup_date}"
+rsync \
+  --human-readable \
+  --archive \
+  --delete \
+  --delete-excluded \
+  "${backup_source}" "${backup_destination}${backup_date}/" \
+  --link-dest="${backup_destination}current/"
+[ ${?} -ne 0 ] && error_exit "Rsync failed"
+log_done
+
+# --- SYMBOLIC LINK ---
+
+log "Linking latest Backup to ${backup_destination}current"
+ln -nsf "${backup_destination}${backup_date}" "${backup_destination}current"
+[ ${?} -ne 0 ] && error_exit "Soft-linking failed"
+log_done
+
+# --- ROTATE ---
+
+if [ "$(ls -1rd ${backup_destination}* | tail -n +$((${BACKUP_ROTATIONS} + 2)) | wc -l)" -gt 0 ]; then
+  log "Removing deprecated backup files..."
+  ls -1rdF ${backup_destination}* | tail -n +$((${BACKUP_ROTATIONS} + 2)) | xargs rm -R
+  [ ${?} -ne 0 ] && error "Failed to remove deprecated Backups"
+  log_done
+fi
+
+# --- SUMMARY ---
+
+log "Successfully created CodiMD backup ${backup_destination}${backup_date} ($(du -sh ${backup_destination}${backup_date} | cut -f1)B)"
+exit 0
