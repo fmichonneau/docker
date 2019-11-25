@@ -8,7 +8,7 @@ log() {
 }
 
 if [ -z "${BACKUP_ROTATIONS}" ]; then
-  export BACKUP_ROTATIONS=4
+  export BACKUP_ROTATIONS=7
 fi
 
 log "Setup environment..."
