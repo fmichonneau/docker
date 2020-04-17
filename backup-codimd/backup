@@ -66,9 +66,9 @@ log_done
 
 # --- ROTATE ---
 
-if [ "$(ls -1rd ${backup_destination}* | tail -n +$((${BACKUP_ROTATIONS} + 2)) | wc -l)" -gt 0 ]; then
+if [ "$(ls -1rd ${dump_destination}* | tail -n +$((${BACKUP_ROTATIONS} + 2)) | wc -l)" -gt 0 ]; then
   log "Removing deprecated backup files..."
-  ls -1rdF ${backup_destination}* | tail -n +$((${BACKUP_ROTATIONS} + 2)) | xargs rm -R
+  ls -1rdF ${dump_destination}* | tail -n +$((${BACKUP_ROTATIONS} + 2)) | xargs rm -R
   [ ${?} -ne 0 ] && error "Failed to remove deprecated Backups"
   log_done
 fi
